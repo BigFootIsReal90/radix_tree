@@ -76,7 +76,7 @@ pub mod radix_tree {
                     } else {
                         // split
                         Self::split_edge(&mut node, &common, remaining, &key, val);
-                        new_string = "".to_string();
+                        //new_string = "".to_string();
                         break;
                     }
 
@@ -91,7 +91,7 @@ pub mod radix_tree {
                             end: true,
                         },
                     );
-                    new_string = "".to_string();
+                    //new_string = "".to_string();
                     break;
                 }
             }
@@ -191,21 +191,32 @@ pub mod radix_tree {
             end: &str,
             curr_str: String,
             res: &'a mut Vec<StreamRes<String>>,
+            start_len: usize,
+            end_len: usize,
         ) {
             println!(
                 "inside search_in_range start:{:?} end:{:?} curr_str:{:?}",
                 start, end, curr_str
             );
             if curr.end {
-                res.push(StreamRes::One(curr_str.clone()));
-                res.extend(
-                    curr.value
-                        .as_ref()
-                        .unwrap()
-                        .iter()
-                        .map(|x| StreamRes::Two((x.0.to_string(), x.1.to_string())))
-                        .collect::<Vec<StreamRes<String>>>(),
+                println!(
+                    "inside end condition,s len {:?}, e len {:?}, curr string len {:?}",
+                    start_len,
+                    end_len,
+                    curr_str.len()
                 );
+                if curr_str.len() >= start_len && curr_str.len() <= end_len {
+                    println!("inside end and len condition");
+                    res.push(StreamRes::One(curr_str.clone()));
+                    res.extend(
+                        curr.value
+                            .as_ref()
+                            .unwrap()
+                            .iter()
+                            .map(|x| StreamRes::Two((x.0.to_string(), x.1.to_string())))
+                            .collect::<Vec<StreamRes<String>>>(),
+                    );
+                }
             }
             for (child, _) in curr.children.iter() {
                 //let count = child.char().count();
@@ -214,9 +225,16 @@ pub mod radix_tree {
                     (cmp::Ordering::Equal, cmp::Ordering::Equal);
                 let mut start_iter = start.chars();
                 let child_iter = child.chars();
-                let (mut s, mut e) = (start, end);
+                let (s, e);
                 for c1 in child_iter {
-                    let c2 = start_iter.next().unwrap();
+                    let temp = start_iter.next();
+                    let c2;
+                    match temp {
+                        Some(c) => c2 = c,
+                        None => {
+                            break;
+                        }
+                    }
                     if c1 == c2 {
                         continue;
                     } else if c1 > c2 {
@@ -248,7 +266,6 @@ pub mod radix_tree {
                     if c1 == c2 {
                         continue;
                     } else if c1 < c2 {
-                        e = "99999999999";
                         child_smaller_than_end = cmp::Ordering::Less;
                         break;
                     } else {
@@ -263,7 +280,7 @@ pub mod radix_tree {
                         e = k2.as_str();
                     }
                     cmp::Ordering::Less => {
-                        s = "999999999999";
+                        e = "999999999999";
                     }
                     cmp::Ordering::Greater => {
                         continue;
@@ -276,6 +293,8 @@ pub mod radix_tree {
                     e,
                     curr_str.clone() + child.as_str(),
                     res,
+                    start_len,
+                    end_len,
                 );
 
                 // } else if end.get(0..count).unwrap() > child.as_str() {
@@ -398,7 +417,7 @@ pub mod radix_tree {
             );
             let mut res: Vec<radix_tree::StreamRes<String>> = Vec::new();
 
-            RadixTree::search_in_range(&rt.root, "0-1", "0-3", "".to_string(), &mut res);
+            RadixTree::search_in_range(&rt.root, "0-1", "0-3", "".to_string(), &mut res, 3, 3);
             println!("{:#?},{:?}", rt, res);
         }
     }
