@@ -8,20 +8,6 @@ pub mod radix_tree {
         Two((T, T)),
     }
 
-    // trait Insertion<T> {
-    //     fn insertion(&mut self, node: T);
-    // }
-    // impl Insertion<(String, String)> for HashMap<String, String> {
-    //     fn insertion(&mut self, node: (String, String)) {
-    //         self.insert(node.0, node.1);
-    //     }
-    // }
-    // impl Insertion<String> for String {
-    //     fn insertion(&mut self, node: String) {
-    //         self.insert_str(self.len() - 1, &node);
-    //     }
-    // }
-
     #[derive(Clone, Debug)]
     pub struct RadixTreeNode<T> {
         pub children: HashMap<String, RadixTreeNode<T>>,
@@ -97,22 +83,6 @@ pub mod radix_tree {
             }
             println!("successfully inserted");
         }
-        // if found {
-        //     Self::split_edge(node, &common, remaining, edge_label, val.clone());
-        //     new_string = "".to_string();
-        //     break;
-        // }
-        // if !found {
-        //     let mut new_node1 = RadixTreeNode {
-        //         children: HashMap::new(),
-        //         value: Some(val),
-        //         end: false,
-        //     };
-        //     self.root.children.insert(new_string, new_node1);
-        //     new_string = "".to_string();
-        //     break;
-        // }
-
         //Find out the common prefix bewteen two string
         fn common_prefix(s: &String, d: &String) -> String {
             println!("inside common prefix");
@@ -252,7 +222,7 @@ pub mod radix_tree {
                         s = k1.as_str();
                     }
                     cmp::Ordering::Greater => {
-                        s = "000000000000";
+                        s = "0";
                     }
                     cmp::Ordering::Less => {
                         continue;
@@ -296,38 +266,6 @@ pub mod radix_tree {
                     start_len,
                     end_len,
                 );
-
-                // } else if end.get(0..count).unwrap() > child.as_str() {
-                //     continue;
-                // }
-                // let (mut s, mut e) = (start, end);
-                // if start.get(0..count).unwrap() == child {
-                //     s = start.get(count..child.len()).unwrap();
-                // } else {
-                //     s = "0000000000";
-                // }
-                // if end.get(0..count).unwrap() == child {
-                //     e = end.get(count..child.len()).unwrap();
-                // } else {
-                //     e = "9999999999";
-                // }
-
-                // RadixTree::search_in_range(
-                //     &curr.children[child],
-                //     s,
-                //     e,
-                //     curr_str.clone() + child,
-                //     res,
-                // );
-
-                // if is_greater_or_equal(child, &start) && is_greater_or_equal(&end, child) {
-                //     Self::search_in_range(
-                //         &curr.children[child],
-                //         &start,
-                //         &end,
-                //         curr_str.clone() + child,
-                //         res,
-                //     );
             }
         }
     }
@@ -350,40 +288,6 @@ pub mod radix_tree {
         }
         return true;
     }
-
-    //Search for a specfic string
-    // fn search(self, s: String) {
-    //     let s_iter = s.chars();
-    //     let node = self.root;
-    //     let remaining = s;
-    //     while remaining.len() > 0 {
-    //         let found = false;
-    //         for (edge_label, child) in node.children.iter() {
-    //             let temp = s_iter.next().unwrap();
-    //             let start: char = edge_label.chars().next().unwrap();
-    //             let flag = True;
-    //             if temp == start {
-    //                 while let Some(c) = start.next() {
-    //                     if c == temp.next() {
-    //                         continue;
-    //                     } else {
-    //                         flag = False;
-    //                         break;
-    //                     }
-    //                 }
-    //                 if flag {
-    //                     s_iter = temp;
-    //                     node = node.children.get(edge_label);
-    //                     remaining = break;
-    //                 } else {
-    //                     break;
-    //                 }
-    //             }
-    //         }
-    //     }
-    //     if !found {
-    //         break;
-    //     }
 
     #[cfg(test)]
     mod tests {
